@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Employee</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            height: 50px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header a {
+            background-color: #ffc107;
+            padding: 10px 20px;
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        header a:hover {
+            background-color: #ffeb3b;
+        }
+
+        .container {
+            margin: 40px auto;
+            max-width: 600px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h1 {
+            text-align: center;
+            font-size: 26px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .gender-radio {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .gender-radio label {
+            font-weight: normal;
+        }
+
+        .image-preview {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="d-flex align-items-center">
+            <img src="{% static 'images/logo1.png' %}" alt="Logo">
+            <h1>Employee Management System</h1>
+        </div>
+        <a href="{% url 'employee_list' %}">Back to Employee List</a>
+    </header>
+
+    <div class="container">
+        <h1>Edit Employee</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Name -->
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" value="{{ employee.name }}" required>
+
+            <!-- Email -->
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ employee.email }}" required>
+
+            <!-- Mobile No -->
+            <label for="mobile_no">Mobile No</label>
+            <input type="text" id="mobile_no" name="mobile_no" value="{{ employee.mobile_no }}" required pattern="\d{10}" maxlength="10" title="Enter a valid 10-digit number">
+
+            <!-- Designation -->
+            <label for="designation">Designation</label>
+            <select id="designation" name="designation" required>
+                <option value="HR" {% if employee.designation == 'HR' %}selected{% endif %}>HR</option>
+                <option value="Manager" {% if employee.designation == 'Manager' %}selected{% endif %}>Manager</option>
+                <option value="Sales" {% if employee.designation == 'Sales' %}selected{% endif %}>Sales</option>
+            </select>
+
+            <!-- Gender -->
+            <label>Gender</label>
+            <div class="gender-radio">
+                <label><input type="radio" id="male" name="gender" value="Male" {% if employee.gender == 'Male' %}checked{% endif %}> Male</label>
+                <label><input type="radio" id="female" name="gender" value="Female" {% if employee.gender == 'Female' %}checked{% endif %}> Female</label>
+                <label><input type="radio" id="others" name="gender" value="Others" {% if employee.gender == 'Others' %}checked{% endif %}> Others</label>
+            </div>
+
+            <!-- Course -->
+            <label for="course">Course</label>
+            <select id="course" name="course" required>
+                <option value="MCA" {% if employee.course == 'MCA' %}selected{% endif %}>MCA</option>
+                <option value="AIML" {% if employee.course == 'AIML' %}selected{% endif %}>AIML</option>
+            </select>
+
+            <!-- Image -->
+            <label for="image">Image Upload</label>
+            <div class="image-preview">
+                {% if employee.image %}
+                    <img src="{{ employee.image.url }}" alt="Employee Image">
+                {% else %}
+                    <p>No image uploaded</p>
+                {% endif %}
+            </div>
+            <input type="file" id="image" name="image">
+
+            <!-- Submit Button -->
+            <button type="submit">Update Employee</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

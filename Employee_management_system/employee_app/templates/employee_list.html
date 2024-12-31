@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f6fa;
+            color: #333;
+        }
+
+        /* Header Section */
+        header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        header .action-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        header .action-btn:hover {
+            background-color: #219150;
+        }
+
+        header .search-container input {
+            padding: 10px 15px;
+            font-size: 14px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            width: 300px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Employee List Section */
+        .container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 1200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .employee-table th,
+        .employee-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .employee-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .employee-table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .employee-table tbody tr:hover {
+            background: #f1f1f1;
+        }
+
+        .employee-table img {
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+        }
+
+        .action-links a {
+            padding: 8px 12px;
+            margin-right: 5px;
+            font-size: 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .action-links a.edit {
+            background: #2980b9;
+        }
+
+        .action-links a.edit:hover {
+            background: #1f6699;
+        }
+
+        .action-links a.delete {
+            background: #e74c3c;
+        }
+
+        .action-links a.delete:hover {
+            background: #c0392b;
+        }
+
+        .count-container {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .employee-table {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Employee Management System</h1>
+        <div>
+            <a href="{% url 'employee_add' %}" class="action-btn">Add Employee</a>
+            <input type="text" id="searchBox" placeholder="Search employees..." onkeyup="searchFunction()">
+        </div>
+    </header>
+
+    <!-- Employee List Section -->
+    <div class="container">
+        <h2>Employee List</h2>
+
+        <div class="count-container">
+            <p>Total Employees: <strong>{{ employees.count }}</strong></p>
+        </div>
+
+        <table class="employee-table" id="employeeTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Designation</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {% if employee.image %}
+                            <img src="{{ employee.image.url }}" alt="Image">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ employee.name }}</td>
+                    <td><a href="mailto:{{ employee.email }}">{{ employee.email }}</a></td>
+                    <td>{{ employee.mobile_no }}</td>
+                    <td>{{ employee.designation }}</td>
+                    <td class="action-links">
+                        <a href="{% url 'employee_edit' employee.id %}" class="edit">Edit</a>
+                        <a href="{% url 'employee_delete' employee.id %}" class="delete" onclick="return confirm('Delete this employee?')">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align:center;">No employees found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function searchFunction() {
+            const input = document.getElementById('searchBox').value.toLowerCase();
+            const rows = document.querySelectorAll('#employeeTable tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const text = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 380px;
+        }
+
+        .register-container img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .register-container h2 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: #f9f9f9;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 20px 14px 15px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .input-group input:focus {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .register-btn {
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            color: white;
+            padding: 15px;
+            width: 100%;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 126, 95, 0.4);
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 126, 95, 0.6);
+        }
+
+        .login-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            color: #ff7e5f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <img src="{% static 'images/icon.png' %}" alt="Logo">
+        <h2>Create an Account</h2>
+        <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Username" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="input-group">
+                <input type="email" name="email" placeholder="Email ID" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password1" placeholder="Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password2" placeholder="Confirm Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+        <p class="login-link">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+</body>
+</html>
